@@ -1,7 +1,11 @@
-# Introduction
+Introduction
+============
 
-# Spécifications du language
+Spécifications du language
+==========================
 
-# Tests
+Tests
+=====
 
-# Conclusion
+Conclusion
+==========
