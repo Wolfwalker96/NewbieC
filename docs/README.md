@@ -4,11 +4,11 @@
 
 ## Variables
 
-## Fonction `main`
-
 ## Conditions
 
 ## Boucles
+
+## Fonctions
 
 ## Mots réservés
 
