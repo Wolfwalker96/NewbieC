@@ -26,7 +26,7 @@ tokens = (
     'EQU',
     'COND',
     'STRING'
-) + tuple(map(lambda s:s.upper(),reserved_words))
+) + tuple(map(lambda s: s.upper(), reserved_words))
 
 t_MOD = r'%'
 t_LTH = r'<'
