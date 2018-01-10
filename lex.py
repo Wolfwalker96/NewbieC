@@ -29,6 +29,7 @@ tokens = (
     'IDENTIFIER'
 ) + tuple(map(lambda s:s.upper(),reserved_words))
 
+
 t_MOD = r'%'
 t_LTH = r'<'
 t_GTH = r'>'
