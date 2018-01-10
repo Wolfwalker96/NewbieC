@@ -25,7 +25,8 @@ tokens = (
     'GTH',
     'EQU',
     'COND',
-    'STRING'
+    'STRING',
+    'IDENTIFIER'
 ) + tuple(map(lambda s:s.upper(),reserved_words))
 
 t_MOD = r'%'
@@ -53,6 +54,13 @@ def t_NUMBER(t):
 def t_STRING(t):
     r'".*"'
     t.value = str(t.value)
+    return t
+
+
+def t_IDENTIFIER(t):
+    r'[A-Za-z_]\w*'
+    if t.value in reserved_words:
+        t.type = t.value.upper()
     return t
 
 
