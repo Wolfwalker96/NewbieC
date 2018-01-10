@@ -25,14 +25,9 @@ tokens = (
     'GTH',
     'EQU',
     'COND',
-<<<<<<< HEAD
     'STRING',
     'IDENTIFIER'
 ) + tuple(map(lambda s:s.upper(),reserved_words))
-=======
-    'STRING'
-) + tuple(map(lambda s: s.upper(), reserved_words))
->>>>>>> 978327b4dc4f86a0f4573086be1f8e13c389da79
 
 t_MOD = r'%'
 t_LTH = r'<'
