@@ -18,8 +18,8 @@ reserved_words = (
 
 tokens = (
     'NUMBER',
-	'ADD_OP',
-	'MUL_OP',
+    'ADD_OP',
+    'MUL_OP',
     'MOD',
     'LTH',
     'GTH',
@@ -36,13 +36,16 @@ t_COND = r'\?'
 
 literals = '()\t'
 
+
 def t_ADD_OP(t):
-	r'\+|-'
-	return t
+    r'\+|-'
+    return t
+
 
 def t_MUL_OP(t):
-	r'\*|/'
-	return t
+    r'\*|/'
+    return t
+
 
 def t_NUMBER(t):
     r'\d+'
