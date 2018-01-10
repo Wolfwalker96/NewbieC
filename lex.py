@@ -5,7 +5,6 @@ reserved_words = (
     'to',
     'in',
     'say',
-    'ask',
     'is',
     'step',
     'return',
@@ -26,6 +25,7 @@ tokens = (
     'GTH',
     'EQU',
     'COND',
+    'STRING'
 ) + tuple(map(lambda s:s.upper(),reserved_words))
 
 t_MOD = r'%'
@@ -33,6 +33,8 @@ t_LTH = r'<'
 t_GTH = r'>'
 t_EQU = r'='
 t_COND = r'\?'
+
+literals = '()\t'
 
 def t_ADD_OP(t):
 	r'\+|-'
@@ -42,10 +44,15 @@ def t_MUL_OP(t):
 	r'\*|/'
 	return t
 
-
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
+    return t
+
+
+def t_STRING(t):
+    r'".*"'
+    t.value = str(t.value)
     return t
 
 
@@ -54,7 +61,7 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 
-t_ignore = ' \t'
+t_ignore = ' '
 
 
 def t_error(t):
