@@ -1,17 +1,34 @@
 import ply.lex as lex
 
-tokens = (
-   'NUMBER',
-   'PLUS',
-   'MINUS',
-   'MULT',
-   'DIV',
-   'MOD',
-   'LTH',
-   'GTH',
-   'EQU',
-   'COND'
+reserved_words = (
+    'else',
+    'to',
+    'in',
+    'say',
+    'ask',
+    'is',
+    'step',
+    'return',
+    'not',
+    'and',
+    'or',
+    'between',
+    'main',
+    'ask'
 )
+
+tokens = (
+    'NUMBER',
+    'PLUS',
+    'MINUS',
+    'MULT',
+    'DIV',
+    'MOD',
+    'LTH',
+    'GTH',
+    'EQU',
+    'COND',
+) + tuple(map(lambda s:s.upper(),reserved_words))
 
 t_PLUS = r'\+'
 t_MINUS = r'-'
