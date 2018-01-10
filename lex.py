@@ -19,10 +19,8 @@ reserved_words = (
 
 tokens = (
     'NUMBER',
-    'PLUS',
-    'MINUS',
-    'MULT',
-    'DIV',
+	'ADD_OP',
+	'MUL_OP',
     'MOD',
     'LTH',
     'GTH',
@@ -30,15 +28,19 @@ tokens = (
     'COND',
 ) + tuple(map(lambda s:s.upper(),reserved_words))
 
-t_PLUS = r'\+'
-t_MINUS = r'-'
-t_MULT = r'\*'
-t_DIV = r'/'
 t_MOD = r'%'
 t_LTH = r'<'
 t_GTH = r'>'
 t_EQU = r'='
 t_COND = r'\?'
+
+def t_ADD_OP(t):
+	r'\+|-'
+	return t
+
+def t_MUL_OP(t):
+	r'\*|/'
+	return t
 
 
 def t_NUMBER(t):
