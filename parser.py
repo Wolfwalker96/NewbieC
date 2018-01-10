@@ -2,10 +2,15 @@ import ply.yacc as yacc
 from lex import tokens
 
 operations = {
-    '+': lambda x,y: x+y,
-    '-': lambda x,y: x-y,
-    '*': lambda x,y: x*y,
-    '/': lambda x,y: x/y
+    '+': lambda x, y: x + y,
+    '-': lambda x, y: x - y,
+    '*': lambda x, y: x * y,
+    '/': lambda x, y: x / y,
+    '%': lambda x, y: x % y,
+    '>': lambda x, y: x > y,
+    '<': lambda x, y: x < y,
+    '<=': lambda x, y: x <= y,
+    '>=': lambda x, y: x >= y
 }
 
 precedence = (
@@ -24,6 +29,7 @@ def p_programme_expr(p):
 	except:
 		p[0]=p[1]
 
+
 def p_statement(p):
     '''statement : expression
         | assignation'''
@@ -34,14 +40,17 @@ def p_expression_num(p):
     'expression : NUMBER'
     p[0] = p[1]
 
+
 def p_expression_op(p):
     '''expression : expression ADD_OP expression
         | expression MUL_OP expression'''
-    p[0] = operations[p[2]](p[1],p[3])
+    p[0] = operations[p[2]](p[1], p[3])
+
 
 def p_minus(p):
 	''' expression : ADD_OP expression %prec UMINUS'''
 	p[0] = operations[p[1]](0,p[2])
+
 
 def p_expression_paren(p):
 	'''expression : '(' expression ')' '''
