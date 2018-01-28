@@ -114,7 +114,7 @@ def p_assign(p):
 
 def p_structure_main(p):
     ''' structure : MAIN NEWLINE programme END '''
-    p[0] = AST.MainNode(p[3])
+    p[0] = AST.MainNode(p[3].children)
 
 
 def p_error(p):
