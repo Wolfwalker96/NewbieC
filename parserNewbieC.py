@@ -33,11 +33,11 @@ def p_statement_say_string(p):
 
 def p_statement_ask(p):
     '''statement : ASK expression '''
-    p[0] = p[1]
+    p[0] = AST.AskNode(AST.TokenNode(p[2]))
 
 def p_statement_ask_string(p):
     '''statement : ASK STRING'''
-    p[0] = p[2]
+    p[0] =  AST.AskNode(AST.TokenNode(p[2]))
 
 def p_statement_ask_string_in(p):
     '''statement : ASK STRING IN expression'''
@@ -50,22 +50,22 @@ def p_structure_cond(p):
 
 def p_for(p):
     ''' for : expression TO expression '''
-    p[0] = p[1]
+    p[0] = AST.ForNode(p[1], p[3])
 
 
 def p_structure_for_in(p):
     ''' structure : for IN expression '''
-    p[0] = p[1]
+    p[0] =  AST.ForInNode(p[3])
 
 
 def p_structure_for_step(p):
     ''' structure : for STEP expression '''
-    p[0] = p[1]
+    p[0] = AST.ForStepNode(p[3])
 
 
 def p_structure_for_step_in(p):
     ''' structure : for STEP expression IN expression '''
-    p[0] = p[1]
+    p[0] = AST.ForStepInNode(p[3],p[5])
 
 
 def p_structure_function(p):

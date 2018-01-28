@@ -5,6 +5,7 @@ import AST
 from AST import addToClass
 
 nbIndent=0
+nbI=0;
 def getIndent():
     return "".join("\t" for i in range(nbIndent))
 
@@ -34,7 +35,16 @@ def compile(self):
 def compile(self):
     code=""
     code+=getIndent()
-    code+="cout <<  %s;\n" % self.children[0].tok
+    code+="printf(\"%%d\",%s);\n" % self.children[0].tok
+    return code
+
+
+@addToClass(AST.AskNode)
+def compile(self):
+    code=""
+    code+=getIndent()
+    code+="double %s" % self.children[0].tok
+    code+="scanf(\"%%d\",&%s);\n" % self.children[0].tok
     return code
 
 
@@ -58,7 +68,9 @@ def compile(self):
 
 @addToClass(AST.WhileNode)
 def compile(self):
-    code="while(cond)\n"
+    code="while(
+    code+=self.children[0].compile()
+    code+=")\n"
     code+="{"
     nbIndent+=1
     code+=getIndent()
@@ -94,6 +106,24 @@ def compile(self):
 
     return code
 
+@addToClass(AST.ForNode)
+def compile(self):
+    i = "i%s" % nbI
+    nbI += 1
+    code+="int %s" % i
+    code+="for(%s=" % i
+    code+=self.children[0].compile()
+    code+="; %s < " %s
+    code+=self.children[1].tok
+    code+=";%s++)\n" % i
+    code+="{"
+    nbIndent+=1
+    code+=getIndent()
+    code+=self.children[1].compile()
+    nbIndent-=1
+    code+="}\n"
+
+    return code
 
 if __name__ == "__main__" :
     from parserNewbieC import parse

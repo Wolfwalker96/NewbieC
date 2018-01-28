@@ -130,6 +130,9 @@ class AssignNode(Node):
 class PrintNode(Node):
     type = 'say'
 
+class AskNode(Node):
+    type = 'ask'
+
 class WhileNode(Node):
     type = 'while'
 
@@ -143,6 +146,18 @@ class IfNode(Node):
     def __init__(self, children):
         Node.__init__(self)
         self.children = children
+
+class ForNode(Node):
+    type = 'for'
+
+class ForInNode(Node):
+    type = 'forIn'
+
+class ForStepNode(Node):
+    type = 'forStep'
+
+class ForStepInNode(Node):
+    type = 'forStepIn'
 
 class CondNode(Node):
     def __init__(self, op, children):
