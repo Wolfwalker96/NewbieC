@@ -15,6 +15,17 @@ def compile(self):
         code += c.compile()
     return code
 
+@addToClass(AST.MainNode)
+def compile(self):
+    code = "int main()\n{\n"
+    global nbIndent
+    nbIndent+=1
+    for c in self.children:
+        code += c.compile()
+    nbIndent-=1
+    code +="}\n"
+    return code
+
 
 @addToClass(AST.ProgramNode)
 def compile(self):
@@ -35,7 +46,10 @@ def compile(self):
 def compile(self):
     code=""
     code+=getIndent()
-    code+="printf(\"%%d\",%s);\n" % self.children[0].tok
+    if '"' in  self.children[0].tok:
+        code+="printf(\"%%s\",%s);\n" % self.children[0].tok
+    else:
+        code+="printf(\"%%d\",%s);\n" % self.children[0].tok
     return code
 
 
@@ -43,7 +57,9 @@ def compile(self):
 def compile(self):
     code=""
     code+=getIndent()
+    code+=getIndent()
     code+="double %s" % self.children[0].tok
+    code+=getIndent()
     code+="scanf(\"%%d\",&%s);\n" % self.children[0].tok
     return code
 
@@ -68,9 +84,12 @@ def compile(self):
 
 @addToClass(AST.WhileNode)
 def compile(self):
+    global nbIndent
+    code+=getIndent()
     code="while("
     code+=self.children[0].compile()
     code+=")\n"
+    code+=getIndent()
     code+="{"
     nbIndent+=1
     code+=getIndent()
@@ -82,15 +101,18 @@ def compile(self):
 
 @addToClass(AST.IfNode)
 def compile(self):
+    global nbIndent
     code=""
+    code+=getIndent()
     code+="if("
     code+=self.children[0].compile()
     code+=")\n"
-    code+="{"
-    nbIndent+=1
     code+=getIndent()
+    code+="{\n"
+    nbIndent+=1
     code+=self.children[1].compile()
     nbIndent-=1
+    code+=getIndent()
     code+="}\n"
 
     return code
@@ -104,10 +126,13 @@ def compile(self):
     code+=" "
     code+=self.children[1].compile()
 
+    code = code.replace("or","||")
+    code = code.replace("and","&&")
     return code
 
 @addToClass(AST.ForNode)
 def compile(self):
+    nbIndent
     i = "i%s" % nbI
     nbI += 1
     code+="int %s" % i
