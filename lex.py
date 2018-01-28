@@ -25,11 +25,10 @@ tokens = (
     'MOD',
     'STRING',
     'IDENTIFIER',
-    'NEWLINE',
-    'INDENT'
+    'NEWLINE'
 ) + tuple(map(lambda s:s.upper(),reserved_words))
 
-literals = '()\t?\n'
+literals = '()?'
 
 
 def t_ADD_OP(t):
@@ -39,11 +38,7 @@ def t_ADD_OP(t):
 
 def t_NEWLINE(t):
     r'\n'
-    return t
-
-
-def t_INDENT(t):
-    r'\t'
+    t.lexer.lineno += len(t.value)
     return t
 
 
@@ -74,12 +69,7 @@ def t_IDENTIFIER(t):
     return t
 
 
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
-
-
-t_ignore = ' '
+t_ignore = '\t '
 
 
 def t_error(t):
