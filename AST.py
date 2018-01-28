@@ -99,6 +99,11 @@ class FunctionNode(Node):
         Node.__init__(self,children)
         self.type = functionName
 
+class CallNode(Node):
+    def __init__(self, functionName, children):
+        Node.__init__(self,children)
+        self.type = functionName
+
 class ParameterNode(Node):
     type = "Parameter"
 

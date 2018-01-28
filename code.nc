@@ -11,7 +11,7 @@ main
         say "A est egal ou plus petit que 2"
     end
     say a
-    0 to 12
-        say "Kiwi"
+    0 to 12 in i
+        x is add a, i*2
     end
 end
