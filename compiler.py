@@ -5,7 +5,10 @@ import AST
 from AST import addToClass
 
 nbIndent=0
-nbI=0;
+nbI=0
+forVarDic = {}
+forStepDic = {}
+currentFor = "i0"
 def getIndent():
     return "".join("\t" for i in range(nbIndent))
 
@@ -132,23 +135,84 @@ def compile(self):
 
 @addToClass(AST.ForNode)
 def compile(self):
-    nbIndent
-    i = "i%s" % nbI
+    global nbIndent
+    global currentFor
+    global nbI
+    code=""
+
     nbI += 1
-    code+="int %s" % i
-    code+="for(%s=" % i
+    currentFor = "i%s" % nbI
+
     code+=self.children[0].compile()
-    code+="; %s < " %s
-    code+=self.children[1].tok
-    code+=";%s++)\n" % i
-    code+="{"
-    nbIndent+=1
-    code+=getIndent()
     code+=self.children[1].compile()
+
     nbIndent-=1
+    code+=getIndent()
     code+="}\n"
 
+    nbI -= 1
+    currentFor = "i%s" % nbI
     return code
+
+
+@addToClass(AST.RangeNode)
+def compile(self):
+    global nbIndent
+    global forStackDic
+    global forStepDic
+    global currentFor
+
+    code=""
+    varName = ""
+    step = ""
+
+    if currentFor in forVarDic:
+        varName = forVarDic[currentFor]
+    else:
+        varName = currentFor
+
+    if currentFor in forStepDic:
+        step = forStepDic[currentFor]
+    else:
+        step = "1"
+
+    code+=getIndent()
+    code+=f"int {varName};\n"
+    code+=getIndent()
+    code+="for(%s=" % varName
+    code+=self.children[0].compile()
+    code+=";%s<" % varName
+    code+=self.children[1].compile()
+    code+=";%s" % varName
+    code+="+=%s)\n" % step
+    code+=getIndent()
+    code+="{\n"
+    nbIndent+=1
+
+    return code
+
+
+@addToClass(AST.StepNode)
+def compile(self):
+    global forStepDic
+    global currentFor
+
+    code=""
+    forStepDic[currentFor]=self.children[1].compile()
+    code+=self.children[0].compile()
+    return code
+
+
+@addToClass(AST.InNode)
+def compile(self):
+    global forStackDic
+    global currentFor
+
+    code=""
+    forVarDic[currentFor]=self.children[1].compile()
+    code+=self.children[0].compile()
+    return code
+
 
 if __name__ == "__main__" :
     from parserNewbieC import parse
