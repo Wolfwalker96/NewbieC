@@ -5,27 +5,24 @@ import AST
 precedence = (
     ('left', 'ADD_OP'),
     ('left', 'MUL_OP'),
-    ('right', 'UMINUS')
+    ('right','UMINUS')
 )
 
 vars = {}
 
 def p_programme_recursive(p):
-	''' programme : statement NEWLINE programme '''
-	p[0] = AST.ProgramNode([p[1]]+p[3].children)
+    ''' programme : statement NEWLINE programme
+            | structure NEWLINE programme '''
+    p[0] = AST.ProgramNode([p[1]]+p[3].children)
 
 def p_programme_statement(p):
-    ''' programme : statement
-            | structure'''
-    p[0] = AST.ProgramNode(p[1])
+    ''' programme : statement NEWLINE
+            | structure NEWLINE'''
+    p[0] = AST.ProgramNode(p[1].children)
 
 def p_statement_say(p):
     ''' statement : SAY expression '''
     p[0] = AST.PrintNode(p[2])
-
-def p_statement_rec(p):
-    ''' statement : INDENT statement '''
-    p[0] = p[2]
 
 def p_statement_say_string(p):
     ''' statement : SAY STRING '''
@@ -40,11 +37,11 @@ def p_statement_ask_string(p):
     p[0] =  AST.AskNode(AST.TokenNode(p[2]))
 
 def p_statement_ask_string_in(p):
-    '''statement : ASK STRING IN expression'''
+    '''statement : ASK STRING IN expression '''
     p[0] = p[1]
 
 def p_structure_cond(p):
-    ''' structure : condition '?' NEWLINE programme'''
+    ''' structure : condition '?' NEWLINE programme END'''
     p[0] = AST.IfNode([p[1], p[4]])
 
 
@@ -69,12 +66,12 @@ def p_structure_for_step_in(p):
 
 
 def p_structure_function(p):
-    ''' structure : IDENTIFIER NEWLINE programme END'''
-    p[0] = AST.FunctionNode(p[1], p[3])
+    ''' structure : IDENTIFIER NEWLINE programme END '''
+    p[0] = AST.FunctionNode(p[1], p[3].children)
 
 
 def p_condition(p):
-    ''' condition : expression COND_OP expression'''
+    ''' condition : expression COND_OP expression '''
     p[0] = AST.CondNode(p[2], [p[1], p[3]])
 
 def p_condition_recursive(p):
@@ -84,13 +81,13 @@ def p_condition_recursive(p):
 
 def p_statement(p):
     '''statement : expression
-        | assignation'''
+        | assignation '''
     p[0] = p[1]
 
 
 def p_expression_num_or_var(p):
     '''expression : NUMBER
-        | IDENTIFIER'''
+        | IDENTIFIER '''
     p[0] = AST.TokenNode(p[1])
 
 
@@ -101,32 +98,29 @@ def p_expression_op(p):
 
 
 def p_minus(p):
-	''' expression : ADD_OP expression %prec UMINUS'''
-	p[0] = AST.OpNode(p[1], [p[2]])
+    ''' expression : ADD_OP expression %prec UMINUS'''
+    p[0] = AST.OpNode(p[1], [p[2]])
 
 
 def p_expression_paren(p):
-	'''expression : '(' expression ')' '''
-	p[0] = p[2]
+    '''expression : '(' expression ')' '''
+    p[0] = p[2]
 
 
 def p_assign(p):
-	''' assignation : IDENTIFIER IS expression '''
-	p[0] = AST.AssignNode([AST.TokenNode(p[1]), p[3]])
+    ''' assignation : IDENTIFIER IS expression '''
+    p[0] = AST.AssignNode([AST.TokenNode(p[1]), p[3]])
 
 
 def p_structure_main(p):
-    ''' structure : MAIN NEWLINE programme'''
+    ''' structure : MAIN NEWLINE programme END '''
     p[0] = AST.MainNode(p[3])
 
 
 def p_error(p):
     if p is not None:
         print("Erreur de syntaxe à la ligne %s" % p.lineno)
-        try:
-            p.errok()
-        except:
-            pass
+        print(p)
     else:
         print("Unexpected end of input")
 
