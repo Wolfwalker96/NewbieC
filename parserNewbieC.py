@@ -18,7 +18,7 @@ def p_programme_recursive(p):
 def p_programme_statement(p):
     ''' programme : statement NEWLINE
             | structure NEWLINE'''
-    p[0] = AST.ProgramNode(p[1].children)
+    p[0] = AST.ProgramNode(p[1])
 
 def p_statement_say(p):
     ''' statement : SAY expression '''
