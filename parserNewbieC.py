@@ -45,29 +45,29 @@ def p_structure_cond(p):
     p[0] = AST.IfNode([p[1], p[4]])
 
 
-def p_for(p):
+def p_structure_for(p):
+    '''structure : for NEWLINE programme END'''
+    p[0] = AST.ForNode([p[1], p[3]])
+
+
+def p_range(p):
     ''' for : expression TO expression '''
-    p[0] = AST.ForNode(p[1], p[3])
+    p[0] = AST.RangeNode([p[1], p[3]])
 
 
-def p_structure_for_in(p):
-    ''' structure : for IN expression '''
-    p[0] =  AST.ForInNode(p[3])
+def p_in(p):
+    ''' for : for IN IDENTIFIER '''
+    p[0] = AST.InNode([p[1], AST.TokenNode(p[3])])
 
 
-def p_structure_for_step(p):
-    ''' structure : for STEP expression '''
-    p[0] = AST.ForStepNode(p[3])
-
-
-def p_structure_for_step_in(p):
-    ''' structure : for STEP expression IN expression '''
-    p[0] = AST.ForStepInNode(p[3],p[5])
+def p_step(p):
+    ''' for : for STEP expression '''
+    p[0] = AST.StepNode([p[1], p[3]])
 
 
 def p_structure_function(p):
     ''' structure : IDENTIFIER NEWLINE programme END '''
-    p[0] = AST.FunctionNode(p[1], p[3].children)
+    p[0] = AST.FunctionNode(p[1], p[3])
 
 
 def p_condition(p):
@@ -115,6 +115,7 @@ def p_assign(p):
 def p_structure_main(p):
     ''' structure : MAIN NEWLINE programme END '''
     p[0] = AST.MainNode(p[3].children)
+    print(p[3])
 
 
 def p_error(p):

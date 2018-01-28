@@ -148,16 +148,16 @@ class IfNode(Node):
         self.children = children
 
 class ForNode(Node):
-    type = 'for'
+    type = 'For'
 
-class ForInNode(Node):
-    type = 'forIn'
+class RangeNode(Node):
+    type = 'Range'
 
-class ForStepNode(Node):
-    type = 'forStep'
+class StepNode(Node):
+    type = 'Step'
 
-class ForStepInNode(Node):
-    type = 'forStepIn'
+class InNode(Node):
+    type = 'In'
 
 class CondNode(Node):
     def __init__(self, op, children):
