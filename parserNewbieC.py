@@ -5,13 +5,13 @@ import AST
 precedence = (
     ('left', 'ADD_OP'),
     ('left', 'MUL_OP'),
-    ('right', 'UMINUS'),
+    ('right', 'UMINUS')
 )
 
 vars = {}
 
 def p_programme_recursive(p):
-	''' programme : statement \t programme '''
+	''' programme : statement NEWLINE programme '''
 	p[0] = AST.ProgramNode([p[1]]+p[3].children)
 
 
@@ -63,7 +63,7 @@ def p_structure_for_step_in(p):
 
 def p_condition(p):
     ''' condition : expression COND_OP expression'''
-    p[0] = AST.CondNode(p[2],[p[1], p[3]])
+    p[0] = AST.CondNode(p[2], [p[1], p[3]])
 
 def p_statement(p):
     '''statement : expression
@@ -100,8 +100,11 @@ def p_assign(p):
 
 
 def p_error(p):
-    print("Syntax error in line %d" % p.lineno)
-    yacc.errok()
+    if p is not None:
+        print("Erreur de syntaxe à la ligne %s" % p.lineno)
+        yacc.errok()
+    else:
+        print("Unexpected end of input")
 
 
 def parse(program):
@@ -118,8 +121,10 @@ if __name__ == "__main__":
         print(result)
 
         import os
+
+        os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
         graph = result.makegraphicaltree()
-        name = os.path.splitext(sys.argv[1])[0]+'ast.pdf'
+        name = os.path.splitext(sys.argv[1])[0]+'-ast.pdf'
         graph.write_pdf(name)
         print("wrote ast to", name)
     else:

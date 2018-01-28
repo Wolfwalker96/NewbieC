@@ -30,6 +30,7 @@ if __name__ == "__main__":
     ast = parse(prog)
     entry = thread(ast)
 
+    os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
     graph = ast.makegraphicaltree()
     entry.threadTree(graph)
 

@@ -23,14 +23,20 @@ tokens = (
     'COND_OP',
     'MOD',
     'STRING',
-    'IDENTIFIER'
+    'IDENTIFIER',
+    'NEWLINE'
 ) + tuple(map(lambda s:s.upper(),reserved_words))
 
-literals = '()\t?'
+literals = '()\t?\n'
 
 
 def t_ADD_OP(t):
     r'\+|-'
+    return t
+
+
+def t_NEWLINE(t):
+    r'\n'
     return t
 
 
