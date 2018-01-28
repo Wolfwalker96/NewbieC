@@ -20,23 +20,13 @@ tokens = (
     'NUMBER',
     'ADD_OP',
     'MUL_OP',
+    'COND_OP',
     'MOD',
-    'LTH',
-    'GTH',
-    'EQU',
-    'COND',
     'STRING',
     'IDENTIFIER'
 ) + tuple(map(lambda s:s.upper(),reserved_words))
 
-
-t_MOD = r'%'
-t_LTH = r'<'
-t_GTH = r'>'
-t_EQU = r'='
-t_COND = r'\?'
-
-literals = '()\t'
+literals = '()\t?'
 
 
 def t_ADD_OP(t):
@@ -48,6 +38,9 @@ def t_MUL_OP(t):
     r'\*|/'
     return t
 
+def t_COND_OP(t):
+    r'==|<=|>=|<|>'
+    return t
 
 def t_NUMBER(t):
     r'\d+'

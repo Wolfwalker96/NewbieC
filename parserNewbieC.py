@@ -16,9 +16,54 @@ def p_programme_recursive(p):
 
 
 def p_programme_statement(p):
-    ''' programme : statement '''
+    ''' programme : statement
+            | structure'''
     p[0] = AST.ProgramNode(p[1])
 
+def p_statement_say(p):
+    ''' statement : SAY expression '''
+    p[0] = AST.PrintNode(p[2])
+
+def p_statement_ask(p):
+    '''statement : ASK expression '''
+    p[0] = p[1]
+
+def p_statement_ask_string(p):
+    '''statement : ASK STRING'''
+    p[0] = p[2]
+
+def p_statement_ask_string_in(p):
+    '''statement : ASK STRING IN expression'''
+    p[0] = p[1]
+
+def p_structure_cond(p):
+    ''' structure : condition '?' '''
+    p[0] = AST.IfNode(p[2])
+
+
+def p_for(p):
+    ''' for : expression TO expression '''
+    p[0] = p[1]
+
+
+def p_structure_for_in(p):
+    ''' structure : for IN expression '''
+    p[0] = p[1]
+
+
+def p_structure_for_step(p):
+    ''' structure : for STEP expression '''
+    p[0] = p[1]
+
+
+def p_structure_for_step_in(p):
+    ''' structure : for STEP expression IN expression '''
+    p[0] = p[1]
+
+
+def p_condition(p):
+    ''' condition : expression COND_OP expression'''
+    p[0] = AST.CondNode(p[2],[p[1], p[3]])
 
 def p_statement(p):
     '''statement : expression
@@ -59,8 +104,10 @@ def p_error(p):
     yacc.errok()
 
 
-yacc.yacc(outputdir='generated')
+def parse(program):
+    return yacc.parse(program)
 
+yacc.yacc(outputdir='generated')
 
 if __name__ == "__main__":
     import sys
