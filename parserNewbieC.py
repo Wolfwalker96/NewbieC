@@ -14,7 +14,6 @@ def p_programme_recursive(p):
 	''' programme : statement NEWLINE programme '''
 	p[0] = AST.ProgramNode([p[1]]+p[3].children)
 
-
 def p_programme_statement(p):
     ''' programme : statement
             | structure'''
@@ -23,6 +22,14 @@ def p_programme_statement(p):
 def p_statement_say(p):
     ''' statement : SAY expression '''
     p[0] = AST.PrintNode(p[2])
+
+def p_statement_rec(p):
+    ''' statement : INDENT statement '''
+    p[0] = p[2]
+
+def p_statement_say_string(p):
+    ''' statement : SAY STRING '''
+    p[0] = AST.PrintNode(AST.TokenNode(p[2]))
 
 def p_statement_ask(p):
     '''statement : ASK expression '''
@@ -37,8 +44,8 @@ def p_statement_ask_string_in(p):
     p[0] = p[1]
 
 def p_structure_cond(p):
-    ''' structure : condition '?' '''
-    p[0] = AST.IfNode(p[2])
+    ''' structure : condition '?' NEWLINE programme'''
+    p[0] = AST.IfNode([p[1], p[4]])
 
 
 def p_for(p):
@@ -61,8 +68,18 @@ def p_structure_for_step_in(p):
     p[0] = p[1]
 
 
+def p_structure_function(p):
+    ''' structure : IDENTIFIER NEWLINE programme END'''
+    p[0] = AST.FunctionNode(p[1], p[3])
+
+
 def p_condition(p):
     ''' condition : expression COND_OP expression'''
+    p[0] = AST.CondNode(p[2], [p[1], p[3]])
+
+def p_condition_recursive(p):
+    ''' condition : condition AND condition
+        | condition OR condition '''
     p[0] = AST.CondNode(p[2], [p[1], p[3]])
 
 def p_statement(p):
@@ -80,7 +97,7 @@ def p_expression_num_or_var(p):
 def p_expression_op(p):
     '''expression : expression ADD_OP expression
         | expression MUL_OP expression'''
-    p[0] = AST.OpNode(p[2],[p[1], p[3]])
+    p[0] = AST.OpNode(p[2], [p[1], p[3]])
 
 
 def p_minus(p):
@@ -95,14 +112,21 @@ def p_expression_paren(p):
 
 def p_assign(p):
 	''' assignation : IDENTIFIER IS expression '''
-	p[0] = AST.AssignNode([AST.TokenNode(p[1]),p[3]])
+	p[0] = AST.AssignNode([AST.TokenNode(p[1]), p[3]])
 
+
+def p_structure_main(p):
+    ''' structure : MAIN NEWLINE programme'''
+    p[0] = AST.MainNode(p[3])
 
 
 def p_error(p):
     if p is not None:
         print("Erreur de syntaxe à la ligne %s" % p.lineno)
-        yacc.errok()
+        try:
+            p.errok()
+        except:
+            pass
     else:
         print("Unexpected end of input")
 

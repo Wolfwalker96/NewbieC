@@ -13,7 +13,8 @@ reserved_words = (
     'or',
     'between',
     'main',
-    'ask'
+    'ask',
+    'end'
 )
 
 tokens = (
@@ -24,7 +25,8 @@ tokens = (
     'MOD',
     'STRING',
     'IDENTIFIER',
-    'NEWLINE'
+    'NEWLINE',
+    'INDENT'
 ) + tuple(map(lambda s:s.upper(),reserved_words))
 
 literals = '()\t?\n'
@@ -37,6 +39,11 @@ def t_ADD_OP(t):
 
 def t_NEWLINE(t):
     r'\n'
+    return t
+
+
+def t_INDENT(t):
+    r'\t'
     return t
 
 

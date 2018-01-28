@@ -94,6 +94,15 @@ class Node:
 class ProgramNode(Node):
     type = 'Program'
 
+class FunctionNode(Node):
+    def __init__(self, functionName, children):
+        self.ID = str(Node.count)
+        self.type = functionName
+        self.children = [children]
+
+class MainNode(Node):
+    type = 'main'
+
 class TokenNode(Node):
     type = 'token'
     def __init__(self, tok):
@@ -116,10 +125,10 @@ class OpNode(Node):
         return "%s (%s)" % (self.op, self.nbargs)
 
 class AssignNode(Node):
-    type = '='
+    type = 'is'
 
 class PrintNode(Node):
-    type = 'print'
+    type = 'say'
 
 class WhileNode(Node):
     type = 'while'
@@ -131,10 +140,16 @@ class EntryNode(Node):
 
 class IfNode(Node):
     type = 'if'
+    def __init__(self, children):
+        Node.__init__(self)
+        self.children = children
 
 class CondNode(Node):
-    def _init__(self, condition, children):
+    def __init__(self, op, children):
+        Node.__init__(self)
         self.op = op
+        self.type = op
+        self.children = children
 
 def addToClass(cls):
     ''' D�corateur permettant d'ajouter la fonction d�cor�e en tant que m�thode
