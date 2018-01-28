@@ -67,8 +67,23 @@ def p_step(p):
 
 def p_structure_function(p):
     ''' structure : IDENTIFIER NEWLINE programme END '''
-    p[0] = AST.FunctionNode(p[1], p[3])
+    p[0] = AST.FunctionNode(p[1], [p[3]])
 
+def p_structure_function_with_parameter(p):
+    ''' structure : IDENTIFIER parameter NEWLINE programme END '''
+    p[0] = AST.FunctionNode(p[1], [p[2], p[4]])
+
+def p_function_parameter_rec(p):
+    ''' parameter : IDENTIFIER ',' parameter '''
+    p[0] = AST.ParameterNode([AST.TokenNode(p[1]), p[3]])
+
+def p_function_parameter(p):
+    '''parameter : IDENTIFIER '''
+    p[0] = AST.ParameterNode(AST.TokenNode(p[1]))
+
+def p_function_return(p):
+    '''statement : RETURN expression '''
+    p[0] = AST.ReturnNode(p[2])
 
 def p_condition(p):
     ''' condition : expression COND_OP expression '''
@@ -115,7 +130,6 @@ def p_assign(p):
 def p_structure_main(p):
     ''' structure : MAIN NEWLINE programme END '''
     p[0] = AST.MainNode(p[3].children)
-    print(p[3])
 
 
 def p_error(p):
