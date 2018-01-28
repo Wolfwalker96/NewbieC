@@ -81,6 +81,10 @@ def p_function_parameter(p):
     '''parameter : IDENTIFIER '''
     p[0] = AST.ParameterNode(AST.TokenNode(p[1]))
 
+def p_function_return(p):
+    '''statement : RETURN expression '''
+    p[0] = AST.ReturnNode(p[2])
+
 def p_condition(p):
     ''' condition : expression COND_OP expression '''
     p[0] = AST.CondNode(p[2], [p[1], p[3]])

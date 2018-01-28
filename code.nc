@@ -1,5 +1,6 @@
 add w, r
     v is w
+    return v
 end
 sum
     f is 4*4

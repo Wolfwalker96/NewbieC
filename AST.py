@@ -102,6 +102,9 @@ class FunctionNode(Node):
 class ParameterNode(Node):
     type = "Parameter"
 
+class ReturnNode(Node):
+    type = "return"
+
 class MainNode(Node):
     type = 'main'
 
