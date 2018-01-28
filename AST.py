@@ -96,9 +96,11 @@ class ProgramNode(Node):
 
 class FunctionNode(Node):
     def __init__(self, functionName, children):
-        self.ID = str(Node.count)
-        self.type = "func"+functionName
-        self.children = [children]
+        Node.__init__(self,children)
+        self.type = functionName
+
+class ParameterNode(Node):
+    type = "Parameter"
 
 class MainNode(Node):
     type = 'main'
