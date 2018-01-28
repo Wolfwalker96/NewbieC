@@ -68,7 +68,7 @@ def compile(self):
 
 @addToClass(AST.WhileNode)
 def compile(self):
-    code="while(
+    code="while("
     code+=self.children[0].compile()
     code+=")\n"
     code+="{"
