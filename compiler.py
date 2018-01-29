@@ -32,8 +32,9 @@ def compile(self):
     nbIndent[functionNames[-1]]+=1
     for c in self.children:
         code += c.compile()
+    code+=getIndent()
+    code +="return 0;\n}\n"
     nbIndent[functionNames[-1]]-=1
-    code +="}\n"
     functionNames.pop()
     return code
 
@@ -307,6 +308,7 @@ if __name__ == "__main__" :
     prog = open(sys.argv[1]).read()
     ast = parse(prog)
     compiled = ast.compile()
+    compiled = "#include <stdio.h>\n#include <stdlib.h>\n\n" + compiled
     name = os.path.splitext(sys.argv[1])[0]+ '.c'
     outfile = open(name,'w')
     outfile.write(compiled)
