@@ -4,14 +4,15 @@ from lex import tokens
 import AST
 from AST import addToClass
 
-nbIndent=0
+nbIndent={}
 nbI=0
 forVarDic = {}
 forStepDic = {}
 currentFor = "i0"
+functionNames = []
 
 def getIndent():
-    return "".join("\t" for i in range(nbIndent))
+    return "".join("\t" for i in range(nbIndent[functionNames[-1]]))
 
 def compile(self):
     code = ""
@@ -21,20 +22,27 @@ def compile(self):
 
 @addToClass(AST.MainNode)
 def compile(self):
-    code = "int main()\n{\n"
+    global functionNames
     global nbIndent
-    nbIndent+=1
+    functionNames.append("main")
+    nbIndent[functionNames[-1]]=0
+    code = "int main()\n{\n"
+    nbIndent[functionNames[-1]]+=1
     for c in self.children:
         code += c.compile()
-    nbIndent-=1
+    nbIndent[functionNames[-1]]-=1
     code +="}\n"
+    functionNames.pop()
     return code
 
 @addToClass(AST.FunctionNode)
 def compile(self):
+    global functionNames
+    functionNames.append(self.tok)
+    nbIndent[functionNames[-1]]=1
     code = f"double {self.tok}("
 
-    if len(self.children)  == 2:
+    if len(self.children) == 2:
         try:
             code+=self.children[1].compile()
             code+=")\n{\n"
@@ -50,8 +58,10 @@ def compile(self):
         code+=self.children[0].compile()
         code+="\n"
 
-
     code+="}\n"
+
+    nbIndent[functionNames[-1]]-=1
+    functionNames.pop()
     return code
 
 @addToClass(AST.ParameterNode)
@@ -68,6 +78,7 @@ def compile(self):
 @addToClass(AST.ReturnNode)
 def compile(self):
     code = ""
+    code+=getIndent()
     code += "return "
     code += self.children[0].compile()
     code += ";\n"
@@ -164,10 +175,10 @@ def compile(self):
     code+=")\n"
     code+=getIndent()
     code+="{"
-    nbIndent+=1
+    nbIndent[functionNames[-1]]+=1
     code+=getIndent()
     code+=self.children[0].compile()
-    nbIndent-=1
+    nbIndent[functionNames[-1]]-=1
     code+="}\n"
     return code
 
@@ -182,12 +193,12 @@ def compile(self):
     code+=")\n"
     code+=getIndent()
     code+="{\n"
-    nbIndent+=1
+    nbIndent[functionNames[-1]]+=1
     try:
         code+=self.children[1].compile()
     except:
         pass
-    nbIndent-=1
+    nbIndent[functionNames[-1]]-=1
     code+=getIndent()
     code+="}\n"
 
@@ -219,7 +230,7 @@ def compile(self):
     code+=self.children[0].compile()
     code+=self.children[1].compile()
 
-    nbIndent-=1
+    nbIndent[functionNames[-1]]-=1
     code+=getIndent()
     code+="}\n"
 
@@ -260,7 +271,7 @@ def compile(self):
     code+="+=%s)\n" % step
     code+=getIndent()
     code+="{\n"
-    nbIndent+=1
+    nbIndent[functionNames[-1]]+=1
 
     return code
 
