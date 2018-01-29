@@ -16,6 +16,8 @@ def getIndent():
 
 def compile(self):
     code = ""
+    code += "#include <stdio.h>\n"
+    code += "#include <stdlib.h>\n\n"
     for c in self.children:
         code += c.compile()
     return code
