@@ -89,7 +89,7 @@ def compile(self):
 def compile(self):
     code = f"{self.tok}("
     code+=self.children[0].compile()
-    code+=");\n"
+    code+=")\n"
     return code
 
 @addToClass(AST.ArgumentNode)
