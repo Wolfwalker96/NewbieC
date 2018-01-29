@@ -9,6 +9,7 @@ nbI=0
 forVarDic = {}
 forStepDic = {}
 currentFor = "i0"
+
 def getIndent():
     return "".join("\t" for i in range(nbIndent))
 
@@ -29,6 +30,69 @@ def compile(self):
     code +="}\n"
     return code
 
+@addToClass(AST.FunctionNode)
+def compile(self):
+    code = f"double {self.tok}("
+
+    if len(self.children)  == 2:
+        try:
+            code+=self.children[1].compile()
+            code+=")\n{\n"
+        except:
+            pass
+        try:
+            code+=self.children[0].compile()
+            code+="\n"
+        except:
+            pass
+    else:
+        code+=")\n{\n"
+        code+=self.children[0].compile()
+        code+="\n"
+
+
+    code+="}\n"
+    return code
+
+@addToClass(AST.ParameterNode)
+def compile(self):
+    code = ""
+    code += "double "
+    code += self.children[0].compile()
+    try:
+        code += ", %s" % self.children[1].compile()
+    except:
+        pass
+    return code
+
+@addToClass(AST.ReturnNode)
+def compile(self):
+    code = ""
+    code += "return "
+    code += self.children[0].compile()
+    code += ";\n"
+    return code
+
+
+@addToClass(AST.CallNode)
+def compile(self):
+    code = f"{self.tok}("
+    code+=self.children[0].compile()
+    code+=");\n"
+    return code
+
+@addToClass(AST.ArgumentNode)
+def compile(self):
+    code = ""
+    try:
+        code += self.children[0].compile()
+    except:
+        pass
+    try:
+        code += ", %s" % self.children[1].compile()
+    except:
+        pass
+    return code
 
 @addToClass(AST.ProgramNode)
 def compile(self):
@@ -49,21 +113,27 @@ def compile(self):
 def compile(self):
     code=""
     code+=getIndent()
-    if '"' in  self.children[0].tok:
-        code+="printf(\"%%s\",%s);\n" % self.children[0].tok
+    if '"' in  self.children[0].compile():
+        code+="printf(\"%%s\",%s);\n" % self.children[0].compile()
     else:
-        code+="printf(\"%%d\",%s);\n" % self.children[0].tok
+        code+="printf(\"%%d\",%s);\n" % self.children[0].compile()
     return code
 
 
 @addToClass(AST.AskNode)
 def compile(self):
     code=""
-    code+=getIndent()
-    code+=getIndent()
-    code+="double %s" % self.children[0].tok
-    code+=getIndent()
-    code+="scanf(\"%%d\",&%s);\n" % self.children[0].tok
+    if len(self.children) == 1 :
+        code+=getIndent()
+        code+="double %s;\n" % self.children[0].compile()
+        code+=getIndent()
+        code+="scanf(\"%%d\",&%s);\n" % self.children[0].compile()
+    else:
+        code+=self.children[0].compile()
+        code+=getIndent()
+        code+="double %s;\n" % self.children[1].compile()
+        code+=getIndent()
+        code+="scanf(\"%%d\",&%s);\n" % self.children[1].compile()
     return code
 
 
@@ -113,7 +183,10 @@ def compile(self):
     code+=getIndent()
     code+="{\n"
     nbIndent+=1
-    code+=self.children[1].compile()
+    try:
+        code+=self.children[1].compile()
+    except:
+        pass
     nbIndent-=1
     code+=getIndent()
     code+="}\n"
