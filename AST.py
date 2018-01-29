@@ -97,6 +97,7 @@ class ProgramNode(Node):
 class FunctionNode(Node):
     def __init__(self, functionName, children):
         Node.__init__(self,children)
+        self.tok = functionName
         self.type = functionName
 
 class CallNode(Node):
