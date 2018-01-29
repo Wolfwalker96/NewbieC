@@ -79,11 +79,11 @@ def p_structure_function(p):
 
 def p_structure_function_with_parameter(p):
     ''' structure : IDENTIFIER parameter NEWLINE programme END '''
-    p[0] = AST.FunctionNode(p[1], [p[2], p[4]])
+    p[0] = AST.FunctionNode(p[1], [p[4], p[2]])
 
 def p_function_parameter_rec(p):
     ''' parameter : IDENTIFIER ',' parameter '''
-    p[0] = AST.ParameterNode([p[3], AST.TokenNode(p[1])])
+    p[0] = AST.ParameterNode([AST.TokenNode(p[1]), p[3]])
 
 def p_function_parameter(p):
     '''parameter : IDENTIFIER '''
