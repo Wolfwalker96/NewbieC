@@ -58,7 +58,7 @@ def compile(self):
         code+=self.children[0].compile()
         code+="\n"
 
-    code+="}\n"
+    code+="}\n\n"
 
     nbIndent[functionNames[-1]]-=1
     functionNames.pop()
@@ -81,7 +81,7 @@ def compile(self):
     code+=getIndent()
     code += "return "
     code += self.children[0].compile()
-    code += ";\n"
+    code += ";"
     return code
 
 
