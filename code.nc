@@ -6,6 +6,8 @@ sum
     f is 4*4
 end
 main
+    ask a
+    ask "t:" in t
     a is 2
     a == 2 or a < 2 and a > 0?
         say "A est egal ou plus petit que 2"

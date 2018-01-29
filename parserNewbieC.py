@@ -29,16 +29,12 @@ def p_statement_say_string(p):
     p[0] = AST.PrintNode(AST.TokenNode(p[2]))
 
 def p_statement_ask(p):
-    '''statement : ASK expression '''
+    '''statement : ASK IDENTIFIER '''
     p[0] = AST.AskNode(AST.TokenNode(p[2]))
 
 def p_statement_ask_string(p):
-    '''statement : ASK STRING'''
-    p[0] =  AST.AskNode(AST.TokenNode(p[2]))
-
-def p_statement_ask_string_in(p):
-    '''statement : ASK STRING IN expression '''
-    p[0] = p[1]
+    '''statement : ASK STRING IN IDENTIFIER'''
+    p[0] = AST.AskNode([AST.PrintNode(AST.TokenNode(p[2])), AST.TokenNode(p[4])])
 
 def p_structure_cond(p):
     ''' structure : condition '?' NEWLINE programme END'''
