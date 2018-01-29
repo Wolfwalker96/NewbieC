@@ -36,9 +36,21 @@ def p_statement_ask_string(p):
     '''statement : ASK STRING IN IDENTIFIER'''
     p[0] = AST.AskNode([AST.PrintNode(AST.TokenNode(p[2])), AST.TokenNode(p[4])])
 
+def p_structure_conditional(p):
+    ''' structure : condstruct '''
+    p[0] = p[1]
+
 def p_structure_cond(p):
-    ''' structure : condition '?' NEWLINE programme END'''
+    ''' condstruct : condition '?' NEWLINE programme END'''
     p[0] = AST.IfNode([p[1], p[4]])
+
+def p_structure_elseif(p):
+    ''' condstruct : ELSE condition '?' NEWLINE programme END'''
+    p[0] = AST.IfNode([p[2], p[5]])
+
+def p_structure_else(p):
+    ''' condstruct : ELSE '?' NEWLINE programme END'''
+    p[0] = AST.IfNode([p[4]])
 
 
 def p_structure_for(p):
@@ -71,7 +83,7 @@ def p_structure_function_with_parameter(p):
 
 def p_function_parameter_rec(p):
     ''' parameter : IDENTIFIER ',' parameter '''
-    p[0] = AST.ParameterNode([AST.TokenNode(p[1]), p[3]])
+    p[0] = AST.ParameterNode([p[3], AST.TokenNode(p[1])])
 
 def p_function_parameter(p):
     '''parameter : IDENTIFIER '''
@@ -87,11 +99,11 @@ def p_function_call(p):
 
 def p_function_call_parameter_rec(p):
     ''' argument : expression ',' argument '''
-    p[0] = AST.ParameterNode([AST.TokenNode(p[1]), p[3]])
+    p[0] = AST.ArgumentNode([AST.TokenNode(p[1]), p[3]])
 
 def p_function_call_parameter(p):
     '''argument : expression '''
-    p[0] = AST.ParameterNode(AST.TokenNode(p[1]))
+    p[0] = AST.ArgumentNode(AST.TokenNode(p[1]))
 
 def p_condition(p):
     ''' condition : expression COND_OP expression '''

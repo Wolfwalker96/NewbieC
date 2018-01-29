@@ -109,6 +109,9 @@ class CallNode(Node):
 class ParameterNode(Node):
     type = "Parameter"
 
+class ArgumentNode(Node):
+    type = "Argument"
+
 class ReturnNode(Node):
     type = "return"
 
